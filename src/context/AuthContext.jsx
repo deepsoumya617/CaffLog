@@ -1,6 +1,7 @@
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
 } from 'firebase/auth'
@@ -29,7 +30,9 @@ export function AuthProvider(props) {
     return signOut(auth)
   }
 
-  function resetPassword() {}
+  function resetPassword(email) {
+    return sendPasswordResetEmail(auth, email)
+  }
 
   const value = {
     globalUser,
@@ -39,6 +42,7 @@ export function AuthProvider(props) {
     signup,
     login,
     logout,
+    resetPassword,
   }
 
   useEffect(() => {

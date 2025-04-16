@@ -8,8 +8,9 @@ export default function Authentication(props) {
   const [isAutenticating, setIsAuthenticating] = useState(false)
   const [isRegistration, setIsRegistration] = useState(false)
   const [error, setError] = useState(null)
+  const [passwordResetMessage, setPasswordResetMessage] = useState('')
 
-  const { signup, login } = useAuth()
+  const { signup, login, resetPassword } = useAuth()
 
   async function handleAuthentication() {
     // edge case
@@ -41,6 +42,15 @@ export default function Authentication(props) {
     }
   }
 
+  async function handleResetPassword() {
+    try {
+      await resetPassword(email)
+      setPasswordResetMessage('Password reset email sent successfully!✅')
+    } catch (err) {
+      setError(err.message)
+    }
+  }
+
   return (
     <>
       <h2 className="sign-up-text">{isRegistration ? 'Sign Up' : 'Login'}</h2>
@@ -67,9 +77,18 @@ export default function Authentication(props) {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <button onClick={handleAuthentication}>
-        <p>{isAutenticating ? 'Authenticating...' : 'Submit'}</p>
-      </button>
+      <div style={{ display: 'flex', gap: '11px' }}>
+        <button onClick={handleAuthentication}>
+          <p>{isAutenticating ? 'Authenticating...' : 'Submit'}</p>
+        </button>
+        <button onClick={handleResetPassword}>Reset Password</button>
+      </div>
+      {passwordResetMessage && <p>{passwordResetMessage}</p>}
+      {error && (
+        <p style={{ color: 'red', fontWeight: 'bold', marginTop: '10px' }}>
+          ❌ {error}
+        </p>
+      )}
       <hr />
       <div className="register-content">
         <p>
